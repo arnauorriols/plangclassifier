@@ -12,29 +12,29 @@ pip install -e git+https://github.com/arnauorriols/plangclassifier#egg=plangclas
 Usage
 =====
 
->>> from plangclassifier import classify_langs
->>>
->>> snippet = """
--define(INFO_KEYS, [name, type, durable, auto_delete, internal, arguments,
-                    policy]).
+        >>> from plangclassifier import classify_langs
+        >>>
+        >>> snippet = """
+        -define(INFO_KEYS, [name, type, durable, auto_delete, internal, arguments,
+                            policy]).
 
-recover() ->
-    Xs = rabbit_misc:table_filter(
-           fun (#exchange{name = XName}) ->
-                   mnesia:read({rabbit_exchange, XName}) =:= []
-           end,
-           fun (X, Tx) ->
-                   X1 = case Tx of
-                            true  -> store_ram(X);
-                            false -> rabbit_exchange_decorator:set(X)
-                        end,
-                   callback(X1, create, map_create_tx(Tx), [X1])
-           end,
-           rabbit_durable_exchange),
-    [XName || #exchange{name = XName} <- Xs].
-"""
->>> classify_langs(snippet, languages=['Python', 'Erlang', 'JavaScript', 'Haskell'])
-[('Erlang', -693.5272278989029), ('JavaScript', -715.8595787671218), ('Prolog', -744.0383123253338), ('Python', -793.2415599562956)]
+        recover() ->
+            Xs = rabbit_misc:table_filter(
+                   fun (#exchange{name = XName}) ->
+                           mnesia:read({rabbit_exchange, XName}) =:= []
+                   end,
+                   fun (X, Tx) ->
+                           X1 = case Tx of
+                                    true  -> store_ram(X);
+                                    false -> rabbit_exchange_decorator:set(X)
+                                end,
+                           callback(X1, create, map_create_tx(Tx), [X1])
+                   end,
+                   rabbit_durable_exchange),
+            [XName || #exchange{name = XName} <- Xs].
+        """
+        >>> classify_langs(snippet, languages=['Python', 'Erlang', 'JavaScript', 'Haskell'])
+        [('Erlang', -693.5272278989029), ('JavaScript', -715.8595787671218), ('Prolog', -744.0383123253338), ('Python', -793.2415599562956)]
 
 Languages supported
 -------------------
